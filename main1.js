@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87CEEB); // 배경색 바꾸는법
+scene.background = new THREE.Color(0x0B132B); // 배경색 바꾸는법
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 
@@ -145,7 +145,9 @@ const block = {
 		// 씬에 인스턴스드 메쉬 추가
 		scene.add(instancedMesh);
 	},
-	soil(){
+	tree(){
+		const box = new THREE.BoxGeometry(5,5,5)
+
 
 	}
 };

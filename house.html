@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            overflow: hidden;
+        }
+    .house{
+        width: 100%;
+        height: 100vh;
+        background-image: url("./img/bg_1.png");
+        
+
+    } 
+    input{
+        outline: none;  
+        font-size: 20px;
+    }
+
+    textarea{
+        resize: none;
+        outline: none;  
+        font-size: 20px;
+    }
+    
+    .visit{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        
+    }
+    .w1 {
+        width:600px;
+        
+    }
+    .h0{
+        height:30px;
+    }
+    .h1{
+        height: 500px;
+    }
+    .clr{
+        background-color: black;
+        color: white;
+    }
+    .clr1{
+        background-color: rgb(14, 165, 14);
+        color: white;
+    }
+    </style>
+</head>
+<body>
+    <div class="house">
+        <div class="visit">
+            <input type="text" class="w1 h0 clr" placeholder="제목">
+            <textarea name="" class="w1 h1 clr" placeholder="내용"></textarea>
+            <input type="submit" value="전송" class="w1 clr1">
+        </div>
+    <div>
+    </div>
+    </div>
+    
+</body>
+</html>
