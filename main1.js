@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
+import { PointerLockControls } from "PointerLockControls";
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0B132B); // 배경색 바꾸는법
@@ -11,6 +11,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 	const controls = new PointerLockControls(camera, document.body);
 	document.addEventListener("click", () => {
 	  controls.lock(); // 클릭하면 FPS 모드 활성화
+
 	});
 	
 	// 🚶‍♂️ 키보드 입력 감지 (WASD 이동)
@@ -18,7 +19,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 	const speed = 0.7;
 	
 	document.addEventListener("keydown", (event) => {
-		console.log(movement)
+	
 	  switch (event.code) {
 		case "KeyW": movement.forward = 1; break; // 앞으로 이동
 		case "KeyS": movement.forward = -1; break; // 뒤로 이동
@@ -49,7 +50,7 @@ function materials(a,b,c,d,e,f){
 	  return materials
 }
 
-
+let blocks_arr = []; //충돌감지 해야되는 대상 지오메트리
 const textureLoader = new THREE.TextureLoader();
 const block = {
  ground(){
@@ -115,6 +116,11 @@ const block = {
 		cube.position.set(70,20,40);
 		cube1.position.set(80,10,40);
 		cube2.position.set(85.5,20,40);
+
+		//
+		blocks_arr.push(cube);
+		blocks_arr.push(cube1);
+		blocks_arr.push(cube2);
 	},
 
 	rock(){
@@ -142,14 +148,15 @@ const block = {
 		// 인스턴스의 행렬 업데이트가 필요하므로 true로 설정
 		instancedMesh.instanceMatrix.needsUpdate = true;
 
-		// 씬에 인스턴스드 메쉬 추가
+		
 		scene.add(instancedMesh);
+		blocks_arr.push(instancedMesh);
 	},
 	tree(){
 		const page = textureLoader.load('./img/tree.svg')
 		const materials = new THREE.MeshBasicMaterial({ map:page })
 	
-		const box = new THREE.BoxGeometry(5,30,5);
+		const box = new THREE.BoxGeometry(5,28,5);
 		const tree_1 = new THREE.Mesh(box,materials)
 		scene.add(tree_1)
 		tree_1.position.set(35,5,40);
@@ -162,16 +169,20 @@ const block = {
 		scene.add(tree_2)
 		tree_2.position.set(35,20,40);
 
+		blocks_arr.push(tree_1);
+		blocks_arr.push(tree_2);
 	}
 };
 
 function area_detection(){
 //console.log(camera.position)
 	let cameraX = camera.position.x
+	let cameraY = camera.position.y
 	let cameraZ = camera.position.z
 	let loc = {
 		a : 0,
-		b : 115
+		b : 115,
+		c : 10 //높이
 	}
 
 	if(loc.a > cameraX){
@@ -180,6 +191,10 @@ function area_detection(){
 	else if(loc.b < cameraX){
 		camera.position.x = loc.b
 	}
+	else if(loc.c < cameraY){
+		camera.position.y = loc.c 
+
+	}
 	else if(loc.a >cameraZ){
 		camera.position.z = loc.a
 	}
@@ -187,7 +202,23 @@ function area_detection(){
 		camera.position.z =loc.b
 	}
 }
+function cdc(){
+	//충돌감지
+	//console.log("cdc:",blocks_arr)
+	const raycaster = new THREE.Raycaster();
+	const direction = new THREE.Vector3();
+	camera.getWorldDirection(direction);
 
+raycaster.set(camera.position, direction);
+const intersects = raycaster.intersectObjects(blocks_arr); // objects는 충돌을 감지할 메쉬들의 배열
+
+if (intersects.length > 0 && intersects[0].distance < 3) {
+    // 충돌이 감지되면 카메라 이동을 막음
+	//3이 민감도임 작게하면 더 가까이 가야 충돌이 감지됨
+    camera.position.copy(camera.position.clone().add(direction.multiplyScalar(-1)));
+}
+
+}
 
 	
 
@@ -214,12 +245,17 @@ function onResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateMatrix();
     renderer.setSize(window.innerWidth,window.innerHeight)
+	
 }
 window.addEventListener('resize',onResize)
 
 function animate() {
+	
     requestAnimationFrame(animate);
-	  // FPS 스타일 이동
+
+	cdc()
+	area_detection()
+	// FPS 스타일 이동
 	  const direction = new THREE.Vector3();
 	  camera.getWorldDirection(direction); // 카메라가 바라보는 방향 구하기
 	  direction.y = 0; // 수평 이동만 적용 (점프 기능 없으면 y축 이동 X)
@@ -227,7 +263,6 @@ function animate() {
 	
 	  const right = new THREE.Vector3();
 	  right.crossVectors(camera.up, direction).normalize(); // 카메라 오른쪽 방향
-	area_detection()
 	  // 이동 적용
 	  camera.position.addScaledVector(direction, movement.forward * speed);
 	  camera.position.addScaledVector(right, movement.right * speed);
@@ -237,4 +272,6 @@ function animate() {
 animate();
 
 
-//shift키 누르고 하면 카메라의 위치도 조절
+setTimeout(() => {
+	document.querySelector(".ment").style.display = "none";
+}, 2000);

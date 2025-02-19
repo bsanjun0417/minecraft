@@ -1,48 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <title></title>
-    <style> 
-    body { margin: 0; overflow: hidden;} 
-    .house{
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      color: rgb(255, 255, 255);
-      opacity: 0.5;
-      top: 50%;
-      left: 50%;
-      font-size: 50px;
-      font-weight: 50;
-      text-align: center;
-    }
-    .inven{
-      position: absolute;
-      bottom: 0%;
-      left: 40%;
-      background-image: url("./img/inventory.png");
-      width: 500px;
-      height: 100px;
-    }
+    <link rel="stylesheet" href="main.css">  
 
-    </style>
 </head>
 <body>
-  
+
+  <div class="ment">
+    <p>게임을 불러오는 중입니다 <br>
+      조금만 기다려주세요</p>
+  </div>
   <div class="house">+</div>
   <div class="inven"></div>
 
-
   <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.min.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/"
-          }
-        }
-    </script>
-    <script type="module" src="./main1.js"></script> <!-- ✅ 경로 수정 -->
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.min.js",
+        "PointerLockControls": "https://cdn.jsdelivr.net/npm/three@0.173.0/examples/jsm/controls/PointerLockControls.js"
+      }
+    }
+</script>
 
   </body>
-</html>
+  <script type="module" src="main1.js" defer></script> <!-- ✅ 경로 수정 -->
+
+  </html>
