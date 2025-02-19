@@ -146,8 +146,21 @@ const block = {
 		scene.add(instancedMesh);
 	},
 	tree(){
-		const box = new THREE.BoxGeometry(5,5,5)
+		const page = textureLoader.load('./img/tree.svg')
+		const materials = new THREE.MeshBasicMaterial({ map:page })
+	
+		const box = new THREE.BoxGeometry(5,30,5);
+		const tree_1 = new THREE.Mesh(box,materials)
+		scene.add(tree_1)
+		tree_1.position.set(35,5,40);
 
+		const geometry = new THREE.BoxGeometry(20,10,20);
+		const leaf = new THREE.MeshBasicMaterial({
+			color: "green"
+		})
+		const tree_2 = new THREE.Mesh(geometry,leaf)
+		scene.add(tree_2)
+		tree_2.position.set(35,20,40);
 
 	}
 };
@@ -184,7 +197,7 @@ camera.position.set(55,10,100)
 
 block.house()
 block.rock()
-
+block.tree()
 
 
 const renderer = new THREE.WebGLRenderer({
